@@ -45,7 +45,7 @@ func InitializeStore() *StorageService {
 }
 
 // SaveUrlMapping
-// 元URLと生成された短いURLをマッピングを保存できるようにしたい。
+// 元URLと生成された短いURLをredisにマッピングを保存する
 func SaveUrlMapping(shortUrl string, originalUrl string, userId string) {
 	err := storeService.redisClient.Set(ctx, shortUrl, originalUrl, CacheDuration).Err()
 	if err != nil {
@@ -54,10 +54,8 @@ func SaveUrlMapping(shortUrl string, originalUrl string, userId string) {
 	fmt.Printf("Saved shortUrl: %s - originalUrl: %s\n", shortUrl, originalUrl)
 }
 
-/*
-RetrieveInitialUrl
-短いURLをもとに元の長いURLを取得する
-*/
+// RetrieveInitialUrl
+// 短いURLをもとに元の長いURLを取得する
 func RetrieveInitialUrl(shortUrl string) string {
 	result, err := storeService.redisClient.Get(ctx, shortUrl).Result()
 	if err != nil {
